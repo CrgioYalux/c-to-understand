@@ -7,8 +7,8 @@ typedef struct Node {
 } node_t;
 
 typedef enum RingDirectionOptions {
-    LEFT = 1,
-    RIGHT = 2
+    RING_DIRECTION_LEFT = 1,
+    RING_DIRECTION_RIGHT = 2
 } ring_direction_options_t;
 
 typedef struct Ring {
@@ -18,7 +18,7 @@ typedef struct Ring {
     // void (*spin)(size_t times); // not really feasible
 } ring_t;
 
-void ring_spin(ring_t *ring, size_t times);
+void ring_spin(ring_t *ring, int times);
 void ring_push(ring_t *ring, node_t *node);
 ring_t *ring_new(ring_direction_options_t direction, node_t *pivot);
 void ring_pop(ring_t *ring);

@@ -19,8 +19,8 @@ $ h j 3 2 5 a e g
 (C) <-> A <-> B <-> C <-> (A)
 
 ### TODO 
-- [ ] Create a ring with the values passed in the arguments
-- [ ] Allow the `spin` function to determine the spin direction with the sign of the value passed
+- [x] Create a ring with the values passed in the arguments
+- [x] Allow the `spin` function to determine the spin direction with the sign of the value passed
 
 ### Future
 - ~Make the `spin` function, which I will, for starters, define as a separate function, a part of the whole Ring object. Make it work like a *method* in OOP.~ 

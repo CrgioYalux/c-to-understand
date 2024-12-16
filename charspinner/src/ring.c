@@ -2,12 +2,13 @@
 #include <stdlib.h>
 #include "ring.h"
 
-void ring_spin(ring_t *ring, size_t times) {
+void ring_spin(ring_t *ring, int times) {
     if (!ring) return;
     if (ring->length < 2) return;
+    int spin_left = times < 0;
 
     while (times) {
-        if (ring->direction == LEFT) {
+        if (spin_left) {
             // Z A [B] C D - spin times=1 LEFT
             // D Z [A] B C
             ring->pivot = ring->pivot->left;
@@ -16,7 +17,8 @@ void ring_spin(ring_t *ring, size_t times) {
             // A B [C] D E
             ring->pivot = ring->pivot->right;
         }
-        times--;
+
+        times = spin_left ? times + 1 : times - 1;
     }
 }
 
@@ -32,7 +34,7 @@ void ring_pop(ring_t *ring) {
     }
 
     if (ring->length == 1) {
-        if (ring->direction == LEFT) {
+        if (ring->direction == RING_DIRECTION_LEFT) {
             node_t *aux = ring->pivot->left;
             ring->pivot->left = NULL;
             ring->pivot->right = NULL;
@@ -46,7 +48,7 @@ void ring_pop(ring_t *ring) {
         return;
     }
 
-    if (ring->direction == LEFT) {
+    if (ring->direction == RING_DIRECTION_LEFT) {
         node_t *aux = ring->pivot->left;
 
         ring->pivot->left->left->right = ring->pivot;
@@ -82,7 +84,7 @@ void ring_push(ring_t *ring, node_t *node) {
         return;
     }
 
-    if (ring->direction == LEFT) {
+    if (ring->direction == RING_DIRECTION_LEFT) {
         ring->pivot->left->right = node;
         node->left = ring->pivot->left;
 
@@ -118,16 +120,17 @@ void ring_print(ring_t *ring, void (*print_cb)(void *value)) {
         return;
     }
     node_print(ring->pivot, ring->direction, ring->length, print_cb);
+    printf("\n");
 }
 
 void node_print(node_t *node, ring_direction_options_t direction, size_t length, void (*print_cb)(void *value)) {
     if (!node || length == 0) return;
 
     print_cb(node->value);
-    printf("items left: %ld\n\n", length);
+    // printf("items left: %ld\n\n", length);
 
     node_print(
-        direction == LEFT ? node->left : node->right,
+        direction == RING_DIRECTION_LEFT ? node->right : node->left,
         direction,
         length - 1,
         print_cb
